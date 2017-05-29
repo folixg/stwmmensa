@@ -47,6 +47,7 @@ func main() {
 		currentDish.name = strings.Split(currentDish.name, "[")[0]
 		if strings.HasPrefix(currentDish.category, "Tagesgericht") ||
 			strings.HasPrefix(currentDish.category, "Aktionsessen") ||
+			strings.HasPrefix(currentDish.category, "Biogericht") ||
 			currentDish.category == "Self-Service" {
 			dishes = append(dishes, currentDish)
 		}
