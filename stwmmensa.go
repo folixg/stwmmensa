@@ -75,7 +75,7 @@ func main() {
 		}
 	})
 
-	outFile, err := os.Create("menu.html")
+	outFile, err := os.Create("/home/pi/infoscreen/menu.html")
 	if err != nil {
 		fmt.Println(err)
 	}
