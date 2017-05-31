@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"os"
 	"strings"
 )
 
@@ -39,7 +37,6 @@ lis : generate html snippet for LIS-infoscreen
 stwmmensa -l 411 -o /my/path/leopold.xml -f xml
 stwmmensa --location=423 --output=weihenstephan.html --format=lis
 `)
-	os.Exit(0)
 }
 
 func locationValid(id string) bool {
@@ -61,7 +58,7 @@ func formatValid(format string) bool {
 	return format == "xml" || format == "lis"
 }
 
-func parseArgs(osargs []string) args {
+func parseArgs(osargs []string) (args, error) {
 	// initialize internal arguents with empty strings
 	var r args
 	r.location = ""
@@ -73,6 +70,7 @@ func parseArgs(osargs []string) args {
 		switch {
 		case osargs[i] == "-h", osargs[i] == "--help":
 			printHelp()
+			return r, fmt.Errorf("Exiting")
 		case osargs[i] == "-l":
 			r.location = osargs[i+1]
 			i += 2
@@ -92,13 +90,13 @@ func parseArgs(osargs []string) args {
 			r.format = strings.TrimPrefix(osargs[i], "--format=")
 			i += 1
 		default:
-			log.Fatal("Unknown argument " + osargs[i] + ". Run stwmmensa -h for help.")
+			return r, fmt.Errorf("Unknown argument " + osargs[i] + ". Run stwmmensa -h for help.")
 		}
 	}
 
 	// was the mandatory output file provided?
 	if r.output == "" {
-		log.Fatal("No output file provided. Run stwmmensa -h for help.")
+		return r, fmt.Errorf("No output file provided. Run stwmmensa -h for help.")
 	}
 	// set default values for argmunets we did not get via command line
 	if r.location == "" {
@@ -109,11 +107,11 @@ func parseArgs(osargs []string) args {
 	}
 	// check if we have valid values
 	if !locationValid(r.location) {
-		log.Fatal(r.location + " is not a valid location identifier. Run stwmmensa -h for help.")
+		return r, fmt.Errorf(r.location + " is not a valid location identifier. Run stwmmensa -h for help.")
 	}
 	if !formatValid(r.format) {
-		log.Fatal(r.format + " is not a valid format. Run stwmmensa -h for help.")
+		return r, fmt.Errorf(r.format + " is not a valid format. Run stwmmensa -h for help.")
 	}
 
-	return r
+	return r, nil
 }

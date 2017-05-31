@@ -1,6 +1,10 @@
 package main
 
-import "os"
+import (
+	"log"
+	"os"
+	"time"
+)
 
 // struct to store information about a dish
 type dish struct {
@@ -10,9 +14,12 @@ type dish struct {
 
 func main() {
 	// parse command line arguments
-	r := parseArgs(os.Args)
+	r, err := parseArgs(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
 	// get the date (today/tomorrow/monday)
-	date := getDate()
+	date := getDate(time.Now())
 	// create url
 	baseURL := "http://www.studentenwerk-muenchen.de/mensa/speiseplan/"
 	menuURL := baseURL + "speiseplan_" + date.Format("2006-01-02") + "_" + r.location + "_-de.html"

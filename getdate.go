@@ -4,10 +4,10 @@ import (
 	"time"
 )
 
-func getDate() time.Time {
+func getDate(now time.Time) time.Time {
 	// Get the date for which we want to fetch the menu.
 	// TODO try to handle holidays
-	now := time.Now()
+
 	// show mondays menu during the weekend
 	if now.Weekday() == time.Saturday {
 		now = now.Add(time.Duration(48) * time.Hour)
