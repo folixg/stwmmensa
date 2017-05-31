@@ -23,7 +23,9 @@ func getDishes(url string) []dish {
 		currentDish.name = s.Find(".js-schedule-dish-description").Text()
 		// get rid of the "allergenkennzeichnungspflichtigen" ingredients
 		currentDish.name = strings.Split(currentDish.name, "[")[0]
+		currentDish.name = strings.Trim(currentDish.name, " ")
 		// we are only interested in main dishes
+		// TODO add support for "Mensa Spezial", "Mensa Klassiker", ...
 		if strings.HasPrefix(currentDish.category, "Tagesgericht") ||
 			strings.HasPrefix(currentDish.category, "Aktionsessen") ||
 			strings.HasPrefix(currentDish.category, "Biogericht") ||
