@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/folixg/stwmmensa.svg?branch=master)](https://travis-ci.org/folixg/stwmmensa)
 # stwmmensa
 Fetch the menu from the *Studentenwerk München* website.
 
