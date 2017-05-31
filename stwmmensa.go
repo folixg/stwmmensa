@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -17,40 +16,16 @@ type dish struct {
 	name     string
 }
 
-// Wochentag contains the german names of the weekdays
-var Wochentag = [7]string{"Sonntag", "Montag", "Dienstag", "Mittwoch",
-	"Donnerstag", "Freitag", "Samstag"}
-
 func main() {
-	// Get the date for which we want to fetch the menu.
-	// TODO try to handle holidays
-	now := time.Now()
-	// show mondays menu during the weekend
-	if now.Weekday() == time.Saturday {
-		now = now.Add(time.Duration(48) * time.Hour)
-	} else if now.Weekday() == time.Sunday {
-		now = now.Add(time.Duration(24) * time.Hour)
-	} else {
-		// show next date if it is later than 14:59
-		if now.Hour() > 14 {
-			// for friday the next date is monday
-			if now.Weekday() == time.Friday {
-				now = now.Add(time.Duration(72) * time.Hour)
-			} else {
-				// for all other cases it is simply the next day
-				now = now.Add(time.Duration(24) * time.Hour)
-			}
-		}
-	}
-	// get string representation of the date
-	var date string
-	date = now.Format("2006-01-02")
+	// parse command line arguments
+	r := parseargs(os.Args)
 
-	// TODO different locations
-	location := "421"
+	// get string representation of the date
+	date := getDate()
+
 	// create url
 	baseURL := "http://www.studentenwerk-muenchen.de/mensa/speiseplan/"
-	menuURL := baseURL + "speiseplan_" + date + "_" + location + "_-de.html"
+	menuURL := baseURL + "speiseplan_" + date.Format("2006-01-02") + "_" + r.location + "_-de.html"
 	// fetch html from Studentenwerk
 	doc, err := goquery.NewDocument(menuURL)
 	if err != nil {
@@ -75,13 +50,13 @@ func main() {
 		}
 	})
 
-	outFile, err := os.Create("/home/pi/infoscreen/menu.html")
+	outFile, err := os.Create(r.output)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	titleString := "Mensa am " + Wochentag[now.Weekday()] + " den " +
-		now.Format("02.01.")
+	titleString := "Mensa am " + wochentag(date.Weekday()) + " den " +
+		date.Format("02.01.")
 	// set title
 	outFile.WriteString("<h1 class=\"mensa-title\">" +
 		html.EscapeString(titleString) + "</h1>\n")
