@@ -10,7 +10,7 @@ type dish struct {
 
 func main() {
 	// parse command line arguments
-	r := parseargs(os.Args)
+	r := parseArgs(os.Args)
 	// get the date (today/tomorrow/monday)
 	date := getDate()
 	// create url

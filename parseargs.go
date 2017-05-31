@@ -13,7 +13,7 @@ type args struct {
 	format   string
 }
 
-func printhelp() {
+func printHelp() {
 	fmt.Print(
 		`stwmmensa accepts the following arguments:
 -h --help: Print this usage info and quit
@@ -42,7 +42,7 @@ stwmmensa --location=423 --output=weihenstephan.html --format=lis
 	os.Exit(0)
 }
 
-func locationvalid(id string) bool {
+func locationValid(id string) bool {
 	var mensen = map[string]string{
 		"411": "Mensa Leopoldstraße",
 		"412": "Mensa Martinsried",
@@ -57,11 +57,11 @@ func locationvalid(id string) bool {
 	return valid
 }
 
-func formatvalid(format string) bool {
+func formatValid(format string) bool {
 	return format == "xml" || format == "lis"
 }
 
-func parseargs(osargs []string) args {
+func parseArgs(osargs []string) args {
 	// initialize internal arguents with empty strings
 	var r args
 	r.location = ""
@@ -72,7 +72,7 @@ func parseargs(osargs []string) args {
 	for i < len(osargs) {
 		switch {
 		case osargs[i] == "-h", osargs[i] == "--help":
-			printhelp()
+			printHelp()
 		case osargs[i] == "-l":
 			r.location = osargs[i+1]
 			i += 2
@@ -108,10 +108,10 @@ func parseargs(osargs []string) args {
 		r.format = "xml"
 	}
 	// check if we have valid values
-	if !locationvalid(r.location) {
+	if !locationValid(r.location) {
 		log.Fatal(r.location + " is not a valid location identifier. Run stwmmensa -h for help.")
 	}
-	if !formatvalid(r.format) {
+	if !formatValid(r.format) {
 		log.Fatal(r.format + " is not a valid format. Run stwmmensa -h for help.")
 	}
 

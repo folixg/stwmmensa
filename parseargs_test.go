@@ -18,9 +18,9 @@ func TestLocation(t *testing.T) {
 		{"xxx", false},
 	}
 	for _, c := range cases {
-		got := locationvalid(c.in)
+		got := locationValid(c.in)
 		if got != c.expected {
-			t.Errorf("locationvalid(%q) == %t, expected %t\n", c.in, got, c.expected)
+			t.Errorf("locationValid(%q) == %t, expected %t\n", c.in, got, c.expected)
 		}
 	}
 }
@@ -35,9 +35,9 @@ func TestFormat(t *testing.T) {
 		{"html", false},
 	}
 	for _, c := range cases {
-		got := formatvalid(c.in)
+		got := formatValid(c.in)
 		if got != c.expected {
-			t.Errorf("formatvalid(%q) == %t, expected %t\n", c.in, got, c.expected)
+			t.Errorf("formatValid(%q) == %t, expected %t\n", c.in, got, c.expected)
 		}
 	}
 }
@@ -50,13 +50,13 @@ func TestParseargs(t *testing.T) {
 		{[]string{"stwmmensa", "--output=test.xml", "--location=411", "--format=lis"}},
 	}
 	for _, c := range cases {
-		r := parseargs(c.in)
+		r := parseArgs(c.in)
 		if !(r.format == "lis" && r.output == "test.xml" && r.location == "411") {
 			t.Error("Failed to parse arguments")
 		}
 	}
 	// default case
-	r := parseargs([]string{"stwmmensa", "-o", "test.xml"})
+	r := parseArgs([]string{"stwmmensa", "-o", "test.xml"})
 	if !(r.format == "xml" && r.output == "test.xml" && r.location == "421") {
 		t.Error("Failed to parse arguments")
 	}
