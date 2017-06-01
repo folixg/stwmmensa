@@ -1,17 +1,37 @@
-package main
+package mensa
 
 import (
 	"fmt"
 	"strings"
 )
 
-type args struct {
-	location string
-	output   string
-	format   string
-}
+/*
+PrintHelp prints following text to stdout:
+	stwmmensa accepts the following arguments:
+	-h --help: Print this usage info and quit
+	-o --output: set the path to the output file (mandatory)
+	-l --location: set mensa location id (default: 421)
+	-f --format: select format (default: xml)
 
-func printHelp() {
+	** Location
+	Here is a list of valid location codes with the name of the corresponding mensa:
+	411 : Mensa Leopoldstraße
+	412 : Mensa Martinsried
+	421 : Mensa Arcisstraße
+	422 : Mensa Garching
+	423 : Mensa Weihenstephan
+	431 : Mensa Lothstraße
+	432 : Mensa Pasing
+
+	** Format
+	xml : a generic xml file is created
+	lis : generate html snippet for LIS-infoscreen
+
+	** Examples:
+	stwmmensa -l 411 -o /my/path/leopold.xml -f xml
+	stwmmensa --location=423 --output=weihenstephan.html --format=lis
+*/
+func PrintHelp() {
 	fmt.Print(
 		`stwmmensa accepts the following arguments:
 -h --help: Print this usage info and quit
@@ -36,10 +56,12 @@ lis : generate html snippet for LIS-infoscreen
 ** Examples:
 stwmmensa -l 411 -o /my/path/leopold.xml -f xml
 stwmmensa --location=423 --output=weihenstephan.html --format=lis
+
 `)
 }
 
-func locationValid(id string) bool {
+// LocationValid checks whether string id is a valid STWM canteen ID
+func LocationValid(id string) bool {
 	var mensen = map[string]string{
 		"411": "Mensa Leopoldstraße",
 		"412": "Mensa Martinsried",
@@ -54,63 +76,81 @@ func locationValid(id string) bool {
 	return valid
 }
 
-func formatValid(format string) bool {
+// FormatValid checks, whether the string format is either "xml" or "lis",
+// which are the two supported output formats
+func FormatValid(format string) bool {
 	return format == "xml" || format == "lis"
 }
 
-func parseArgs(osargs []string) (args, error) {
+/*
+ParseArgs checks if the command line arguments are valid.
+The input osargs is supposed to be the output of os.Args
+
+Known arguments are:
+	-h --help: Print this usage info and quit
+	-o --output: set the path to the output file (mandatory)
+	-l --location: set mensa location id (default: 421)
+	-f --format: select format (default: xml)
+
+If -h or --help is detected, a help message is printed to stdout.
+
+If the parsed command line aguments are either not valid or contained the
+-h/--help switch, a non-nil error is returned and the returned arguments
+Args do not contain valid command line arguments.
+*/
+func ParseArgs(osargs []string) (Args, error) {
 	// initialize internal arguents with empty strings
-	var r args
-	r.location = ""
-	r.output = ""
-	r.format = ""
+	var r Args
+	r.Location = ""
+	r.Outfile = ""
+	r.Format = ""
 
 	i := 1
 	for i < len(osargs) {
 		switch {
 		case osargs[i] == "-h", osargs[i] == "--help":
-			printHelp()
-			return r, fmt.Errorf("Exiting")
+			//printHelp()
+			return r, fmt.Errorf("print help")
 		case osargs[i] == "-l":
-			r.location = osargs[i+1]
+			r.Location = osargs[i+1]
 			i += 2
 		case strings.HasPrefix(osargs[i], "--location="):
-			r.location = strings.TrimPrefix(osargs[i], "--location=")
-			i += 1
+			r.Location = strings.TrimPrefix(osargs[i], "--location=")
+			i++
 		case osargs[i] == "-o":
-			r.output = osargs[i+1]
+			r.Outfile = osargs[i+1]
 			i += 2
 		case strings.HasPrefix(osargs[i], "--output="):
-			r.output = strings.TrimPrefix(osargs[i], "--output=")
-			i += 1
+			r.Outfile = strings.TrimPrefix(osargs[i], "--output=")
+			i++
 		case osargs[i] == "-f":
-			r.format = osargs[i+1]
+			r.Format = osargs[i+1]
 			i += 2
 		case strings.HasPrefix(osargs[i], "--format="):
-			r.format = strings.TrimPrefix(osargs[i], "--format=")
-			i += 1
+			r.Format = strings.TrimPrefix(osargs[i], "--format=")
+			i++
 		default:
-			return r, fmt.Errorf("Unknown argument " + osargs[i] + ". Run stwmmensa -h for help.")
+			return r, fmt.Errorf("unknown argument " + osargs[i] + ". Run stwmmensa -h for help")
 		}
 	}
 
 	// was the mandatory output file provided?
-	if r.output == "" {
-		return r, fmt.Errorf("No output file provided. Run stwmmensa -h for help.")
+	if r.Outfile == "" {
+		return r, fmt.Errorf("no output file provided. Run stwmmensa -h for help")
 	}
 	// set default values for argmunets we did not get via command line
-	if r.location == "" {
-		r.location = "421"
+	if r.Location == "" {
+		r.Location = "421"
 	}
-	if r.format == "" {
-		r.format = "xml"
+	if r.Format == "" {
+		r.Format = "xml"
 	}
 	// check if we have valid values
-	if !locationValid(r.location) {
-		return r, fmt.Errorf(r.location + " is not a valid location identifier. Run stwmmensa -h for help.")
+	if !LocationValid(r.Location) {
+		return r, fmt.Errorf(r.Location + " is not a valid location identifier. Run stwmmensa -h for help")
 	}
-	if !formatValid(r.format) {
-		return r, fmt.Errorf(r.format + " is not a valid format. Run stwmmensa -h for help.")
+	if !FormatValid(r.Format) {
+		return r, fmt.Errorf(r.Format + " is not a valid format. Run stwmmensa -h for help")
 	}
 
 	return r, nil

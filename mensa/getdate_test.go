@@ -1,4 +1,4 @@
-package main
+package mensa
 
 import (
 	"testing"
@@ -19,9 +19,9 @@ func TestWochentag(t *testing.T) {
 		{6, "Samstag"},
 	}
 	for _, c := range cases {
-		got := wochentag(c.in)
+		got := GermanWeekday(c.in)
 		if got != c.expected {
-			t.Errorf("wochentag(%d) == %q, expected %q\n", c.in, got, c.expected)
+			t.Errorf("GermanWeekday(%d) == %q, expected %q\n", c.in, got, c.expected)
 		}
 	}
 }
@@ -57,9 +57,9 @@ func TestDate(t *testing.T) {
 			time.Date(2017, 06, 5, 16, 0, 0, 0, time.Local)},
 	}
 	for _, c := range cases {
-		got := getDate(c.in)
+		got := GetDate(c.in)
 		if got != c.expected {
-			t.Errorf("getDate(%s) == %s, expected %s\n", c.in, got, c.expected)
+			t.Errorf("GetDate(%s) == %s, expected %s\n", c.in, got, c.expected)
 		}
 	}
 }

@@ -1,4 +1,4 @@
-package main
+package mensa
 
 import "testing"
 
@@ -18,9 +18,9 @@ func TestLocation(t *testing.T) {
 		{"xxx", false},
 	}
 	for _, c := range cases {
-		got := locationValid(c.in)
+		got := LocationValid(c.in)
 		if got != c.expected {
-			t.Errorf("locationValid(%q) == %t, expected %t\n", c.in, got, c.expected)
+			t.Errorf("LocationValid(%q) == %t, expected %t\n", c.in, got, c.expected)
 		}
 	}
 }
@@ -35,9 +35,9 @@ func TestFormat(t *testing.T) {
 		{"html", false},
 	}
 	for _, c := range cases {
-		got := formatValid(c.in)
+		got := FormatValid(c.in)
 		if got != c.expected {
-			t.Errorf("formatValid(%q) == %t, expected %t\n", c.in, got, c.expected)
+			t.Errorf("FormatValid(%q) == %t, expected %t\n", c.in, got, c.expected)
 		}
 	}
 }
@@ -52,8 +52,8 @@ func TestParseargs(t *testing.T) {
 		{[]string{"stwmmensa", "--output=test.xml", "--location=411", "--format=lis"}},
 	}
 	for _, c := range cases {
-		r, err := parseArgs(c.in)
-		if !(r.format == "lis" && r.output == "test.xml" && r.location == "411") {
+		r, err := ParseArgs(c.in)
+		if !(r.Format == "lis" && r.Outfile == "test.xml" && r.Location == "411") {
 			t.Error("Failed to parse arguments")
 		}
 		if err != nil {
@@ -62,8 +62,8 @@ func TestParseargs(t *testing.T) {
 	}
 
 	// check default values
-	r, err := parseArgs([]string{"stwmmensa", "-o", "test.xml"})
-	if !(r.format == "xml" && r.output == "test.xml" && r.location == "421") {
+	r, err := ParseArgs([]string{"stwmmensa", "-o", "test.xml"})
+	if !(r.Format == "xml" && r.Outfile == "test.xml" && r.Location == "421") {
 		t.Error("Failed to parse arguments")
 	}
 	if err != nil {
@@ -71,31 +71,31 @@ func TestParseargs(t *testing.T) {
 	}
 
 	// missing output file
-	_, err = parseArgs([]string{"stwmmensa", "-f", "lis"})
+	_, err = ParseArgs([]string{"stwmmensa", "-f", "lis"})
 	if err == nil {
 		t.Error("Failed to detect missing output file.")
 	}
 
 	// illegal location
-	_, err = parseArgs([]string{"stwmmensa", "-o", "test", "-l", "487"})
+	_, err = ParseArgs([]string{"stwmmensa", "-o", "test", "-l", "487"})
 	if err == nil {
 		t.Error("Failed to detect illegal location ID.")
 	}
 
 	// illegal format
-	_, err = parseArgs([]string{"stwmmensa", "-o", "test", "-f", "html"})
+	_, err = ParseArgs([]string{"stwmmensa", "-o", "test", "-f", "html"})
 	if err == nil {
 		t.Error("Failed to detect illegal format.")
 	}
 
 	// print help
-	_, err = parseArgs([]string{"stwmmensa", "-h"})
+	_, err = ParseArgs([]string{"stwmmensa", "-h"})
 	if err == nil {
 		t.Error("Failed to show help.")
 	}
 
 	// unknown option
-	_, err = parseArgs([]string{"stwmmensa", "-o", "test", "--foo=bar"})
+	_, err = ParseArgs([]string{"stwmmensa", "-o", "test", "--foo=bar"})
 	if err == nil {
 		t.Error("Failed to detect unknown option.")
 	}

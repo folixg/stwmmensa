@@ -1,3 +1,5 @@
+// Package mensa provides methods and types used to fetch canteen menus
+// from the Studentenwerk München website.
 package mensa
 
 import (
@@ -5,27 +7,29 @@ import (
 	"time"
 )
 
+// Args is used to store command line arguments.
 type Args struct {
 	Location string
 	Outfile  string
 	Format   string
 }
 
-// struct to store information about a dish
-type dish struct {
-	category string
-	name     string
+// Dish is used to store name and category of a dish
+type Dish struct {
+	Category string
+	Name     string
 }
 
-// menu consists of a date, a location and a slice of dishes
+// Menu consists of date, canteen location id and a list of dishes
 type Menu struct {
-	date     time.Time
-	location string
-	dishes   []dish
+	Date     time.Time
+	Location string
+	Dishes   []Dish
 }
 
-// xml representation of a dish
-type xmlDish struct {
+// XMLDish is used to store information about a dish in a format than can be
+// used to create xml-output using xml.Marshal
+type XMLDish struct {
 	XMLName  xml.Name `xml:"dish"`
 	Name     string   `xml:"name,attr"`
 	Category string   `xml:"category,attr"`
