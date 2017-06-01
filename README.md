@@ -1,9 +1,8 @@
 
-# stwmmensa
+# stwmmensa [![Build Status](https://travis-ci.org/folixg/stwmmensa.svg?branch=master)](https://travis-ci.org/folixg/stwmmensa) [![GoDoc](https://godoc.org/github.com/folixg/stwmmensa?status.svg)](https://godoc.org/github.com/folixg/stwmmensa)
+
+
 Fetch the menu from the *Studentenwerk München* website.
-
-[![Build Status](https://travis-ci.org/folixg/stwmmensa.svg?branch=master)](https://travis-ci.org/folixg/stwmmensa)
-
 
 
 ### Usage
