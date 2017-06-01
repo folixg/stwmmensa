@@ -3,9 +3,23 @@ package main
 import (
 	"log"
 	"strings"
+	"time"
 
 	"github.com/PuerkitoBio/goquery"
 )
+
+// struct to store information about a dish
+type dish struct {
+	category string
+	name     string
+}
+
+// menu consists of a date, a location and a slice of dishes
+type Menu struct {
+	date     time.Time
+	location string
+	dishes   []dish
+}
 
 func getDishes(url string) []dish {
 	// fetch html from Studentenwerk
@@ -34,4 +48,16 @@ func getDishes(url string) []dish {
 		}
 	})
 	return dishes
+}
+
+func fetchMenu(date time.Time, location string) Menu {
+	var menu = new(Menu)
+	menu.date = date
+	menu.location = location
+	// create url
+	baseURL := "http://www.studentenwerk-muenchen.de/mensa/speiseplan/"
+	menuURL := baseURL + "speiseplan_" + date.Format("2006-01-02") + "_" + location + "_-de.html"
+	// get dishes
+	menu.dishes = getDishes(menuURL)
+	return *menu
 }

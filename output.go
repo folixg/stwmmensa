@@ -73,3 +73,11 @@ func formatLIS(dishes []dish, date time.Time, outfile string) {
 	outFile.WriteString("</div>\n")
 	outFile.Close()
 }
+
+func writeOutput(menu Menu, format string, outfile string) {
+	if format == "lis" {
+		formatLIS(menu.dishes, menu.date, outfile)
+	} else {
+		formatXML(menu.dishes, menu.date, outfile)
+	}
+}
