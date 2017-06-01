@@ -1,6 +1,10 @@
-[![Build Status](https://travis-ci.org/folixg/stwmmensa.svg?branch=master)](https://travis-ci.org/folixg/stwmmensa)
+
 # stwmmensa
 Fetch the menu from the *Studentenwerk München* website.
+
+[![Build Status](https://travis-ci.org/folixg/stwmmensa.svg?branch=master)](https://travis-ci.org/folixg/stwmmensa)
+
+
 
 ### Usage
 ```
@@ -28,8 +32,14 @@ lis : generate html snippet for LIS-infoscreen
 stwmmensa -l 411 -o /my/path/leopold.xml -f xml
 stwmmensa --location=423 --output=weihenstephan.html --format=lis
 ```
+### Documentation
+The documentation [for the command](https://godoc.org/github.com/folixg/stwmmensa)
+and [for the package](https://godoc.org/github.com/folixg/stwmmensa/mensa) are
+available on [godoc.org](https://godoc.org)
 
 ### LIS specifics
 The format `lis` creates a HTML snippet, that is used for the infoscreen in the kitchen at [TUM LIS](http://www.lis.ei.tum.de). *It is not valid HTML for standalone usage.*
 
-In order to cross-compile for the Raspberry Pi run ```GOOS=linux GOARCH=arm go build -v stwmmensa.go```
+In order to cross-compile for the Raspberry Pi run:
+
+```GOOS=linux GOARCH=arm go build -v github.com/folixg/stwmmensa```
