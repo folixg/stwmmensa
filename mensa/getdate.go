@@ -4,13 +4,21 @@ import (
 	"time"
 )
 
+// NextDayAfter is the threshold value which is used to determine, whether
+// todays menu or tomorrows menu shall be fetched.
+// If the processed time is equal to or greater than NextDayAfter:00 the next
+// day is chosen. For example if NextDayAfter == 14 the next day will be chosen
+// starting from 2PM.
+const NextDayAfter = 14
+
 /*
 GetDate returns the date for which we want to show the canteen menu based
 on the time now.
 If now.Weekday() is either Saturday or Sunday the following monday will be
 returned by adding 48 resp. 24 hours to now.
-For monday through friday now itself will be returned if it is before 3PM.
-If now is after 3PM, the following day (for friday the following monday)
+For monday through friday now itself will be returned if it is before
+NextDayAfter PM.
+If now is after NextDayAfter PM, the following day (for friday the following monday)
 will be returned by adding 24 hours (72 hours for friday) to now.
 */
 func GetDate(now time.Time) time.Time {
@@ -22,8 +30,8 @@ func GetDate(now time.Time) time.Time {
 	} else if now.Weekday() == time.Sunday {
 		now = now.Add(time.Duration(24) * time.Hour)
 	} else {
-		// show next date if it is later than 14:59
-		if now.Hour() > 14 {
+		// show next date if it is later than NextDayAfter:00
+		if now.Hour() >= NextDayAfter {
 			// for friday the next date is monday
 			if now.Weekday() == time.Friday {
 				now = now.Add(time.Duration(72) * time.Hour)

@@ -31,28 +31,28 @@ func TestDate(t *testing.T) {
 		in       time.Time
 		expected time.Time
 	}{
-		// normal weekday before 15:00
+		// normal weekday before NextDayAfter
 		{time.Date(2017, 05, 31, 0, 0, 0, 0, time.Local),
 			time.Date(2017, 05, 31, 0, 0, 0, 0, time.Local)},
-		// normal weekday after 15:00
+		// normal weekday after NextDayAfter
 		{time.Date(2017, 05, 31, 16, 0, 0, 0, time.Local),
 			time.Date(2017, 06, 01, 16, 0, 0, 0, time.Local)},
-		// friday before 15:00
+		// friday before NextDayAfter
 		{time.Date(2017, 05, 26, 0, 0, 0, 0, time.Local),
 			time.Date(2017, 05, 26, 0, 0, 0, 0, time.Local)},
-		// friday after 15:00
+		// friday after NextDayAfter
 		{time.Date(2017, 05, 26, 16, 0, 0, 0, time.Local),
 			time.Date(2017, 05, 29, 16, 0, 0, 0, time.Local)},
-		// saturday before 15:00
+		// saturday before NextDayAfter
 		{time.Date(2017, 05, 27, 0, 0, 0, 0, time.Local),
 			time.Date(2017, 05, 29, 0, 0, 0, 0, time.Local)},
-		// saturday after 15:00
+		// saturday after NextDayAfter
 		{time.Date(2017, 05, 27, 16, 0, 0, 0, time.Local),
 			time.Date(2017, 05, 29, 16, 0, 0, 0, time.Local)},
-		// sunday before 15:00
+		// sunday before NextDayAfter
 		{time.Date(2017, 06, 4, 0, 0, 0, 0, time.Local),
 			time.Date(2017, 06, 5, 0, 0, 0, 0, time.Local)},
-		// sunday after 15:00
+		// sunday after NextDayAfter
 		{time.Date(2017, 06, 4, 16, 0, 0, 0, time.Local),
 			time.Date(2017, 06, 5, 16, 0, 0, 0, time.Local)},
 	}
