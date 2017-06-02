@@ -37,11 +37,10 @@ Known arguments are:
 	-l --location: set mensa location id (default: 421)
 	-f --format: select format (default: xml)
 
-If -h or --help is detected, a help message is printed to stdout.
-
-If the parsed command line aguments are either not valid or contained the
--h/--help switch, a non-nil error is returned and the returned arguments
-Args do not contain valid command line arguments.
+If -h or --help is detected a "help" error is returned.
+If the parsed command line aguments are not valid an other non-nil error
+is returned. In both cases the returned arguments Args do not contain valid
+ command line arguments.
 */
 func ParseArgs(osargs []string) (Args, error) {
 	// initialize internal arguents with empty strings
