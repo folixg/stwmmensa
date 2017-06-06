@@ -1,48 +1,8 @@
-package mensa
+package main
 
 import "testing"
 
-func TestLocation(t *testing.T) {
-	cases := []struct {
-		in       string
-		expected bool
-	}{
-		{"411", true},
-		{"412", true},
-		{"421", true},
-		{"422", true},
-		{"423", true},
-		{"431", true},
-		{"432", true},
-		{"420", false},
-		{"xxx", false},
-	}
-	for _, c := range cases {
-		got := LocationValid(c.in)
-		if got != c.expected {
-			t.Errorf("LocationValid(%q) == %t, expected %t\n", c.in, got, c.expected)
-		}
-	}
-}
-
-func TestFormat(t *testing.T) {
-	cases := []struct {
-		in       string
-		expected bool
-	}{
-		{"xml", true},
-		{"lis", true},
-		{"html", false},
-	}
-	for _, c := range cases {
-		got := FormatValid(c.in)
-		if got != c.expected {
-			t.Errorf("FormatValid(%q) == %t, expected %t\n", c.in, got, c.expected)
-		}
-	}
-}
-
-func TestParseargs(t *testing.T) {
+func TestParseArgs(t *testing.T) {
 
 	// good cases
 	cases := []struct {
