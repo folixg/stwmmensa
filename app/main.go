@@ -68,7 +68,7 @@ type Args struct {
 }
 
 /*
-parseArgs checks if the command line arguments are valid.
+ParseArgs checks if the command line arguments are valid.
 The input osargs is supposed to be the output of os.Args
 
 Known arguments are:
