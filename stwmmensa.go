@@ -132,7 +132,8 @@ func GetDishes(url string) []Dish {
 		if strings.HasPrefix(currentDish.Category, "Tagesgericht") ||
 			strings.HasPrefix(currentDish.Category, "Aktionsessen") ||
 			strings.HasPrefix(currentDish.Category, "Biogericht") ||
-			currentDish.Category == "Self-Service" ||
+			(currentDish.Category == "Self-Service" &&
+				currentDish.Name != "Saisonale Beilagensalate") ||
 			currentDish.Category == "Baustellenteller" ||
 			currentDish.Category == "Fast Lane" {
 			dishes = append(dishes, currentDish)
