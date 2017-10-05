@@ -132,7 +132,9 @@ func GetDishes(url string) []Dish {
 		if strings.HasPrefix(currentDish.Category, "Tagesgericht") ||
 			strings.HasPrefix(currentDish.Category, "Aktionsessen") ||
 			strings.HasPrefix(currentDish.Category, "Biogericht") ||
-			currentDish.Category == "Self-Service" {
+			currentDish.Category == "Self-Service" ||
+			currentDish.Category == "Baustellenteller" ||
+			currentDish.Category == "Fast Lane" {
 			dishes = append(dishes, currentDish)
 			// BUG(tg) canteens which use a naming scheme different from "Tagesgericht",
 			// "Aktionsessen", "Biogericht" and "Self-Service" won't work at the moment
