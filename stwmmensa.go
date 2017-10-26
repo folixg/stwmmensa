@@ -134,11 +134,10 @@ func GetDishes(url string) []Dish {
 			strings.HasPrefix(currentDish.Category, "Biogericht") ||
 			(currentDish.Category == "Self-Service" &&
 				currentDish.Name != "Saisonale Beilagensalate") ||
+			currentDish.Category == "Self-Service Grüne Mensa" ||
 			currentDish.Category == "Baustellenteller" ||
 			currentDish.Category == "Fast Lane" {
 			dishes = append(dishes, currentDish)
-			// BUG(tg) canteens which use a naming scheme different from "Tagesgericht",
-			// "Aktionsessen", "Biogericht" and "Self-Service" won't work at the moment
 		}
 	})
 	return dishes
