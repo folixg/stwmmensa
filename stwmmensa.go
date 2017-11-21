@@ -122,22 +122,26 @@ func GetDishes(url string) []Dish {
 	var currentDish Dish
 	doc.Find(".c-schedule__list-item").Each(func(i int, s *goquery.Selection) {
 		// get category (Tagesgericht, Aktionsessen, Beilage, ...)
-		currentDish.Category = s.Find(".stwm-artname").Text()
+		// only update, if the current dish decalres a new category
+		if s.Find(".stwm-artname").Text() != "" {
+			currentDish.Category = s.Find(".stwm-artname").Text()
+		}
 		// get dish description
 		currentDish.Name = s.Find(".js-schedule-dish-description").Text()
 		// get rid of the "allergenkennzeichnungspflichtigen" ingredients
 		currentDish.Name = strings.Split(currentDish.Name, "[")[0]
 		currentDish.Name = strings.Trim(currentDish.Name, " ")
 		// we are only interested in main dishes
-		if strings.HasPrefix(currentDish.Category, "Tagesgericht") ||
-			strings.HasPrefix(currentDish.Category, "Aktionsessen") ||
-			strings.HasPrefix(currentDish.Category, "Biogericht") ||
-			(currentDish.Category == "Self-Service" &&
-				currentDish.Name != "Saisonale Beilagensalate") ||
-			currentDish.Category == "Self-Service Grüne Mensa" ||
-			currentDish.Category == "Baustellenteller" ||
-			currentDish.Category == "Fast Lane" {
-			dishes = append(dishes, currentDish)
+		// so first we ignore everything that is of category "Beilagen"
+		if currentDish.Category != "Beilagen" {
+			// get rid of everything, that is just a single word (e.g. Reis)
+			if len(strings.Split(currentDish.Name, " ")) != 1 {
+				// now ignore some known side dishes, we didn't catch yet
+				if currentDish.Name != "Saisonale Beilagensalate" &&
+					!strings.HasPrefix(currentDish.Name, "Antipasti") {
+					dishes = append(dishes, currentDish)
+				}
+			}
 		}
 	})
 	return dishes
