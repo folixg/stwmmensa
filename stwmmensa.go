@@ -8,6 +8,7 @@ import (
 	"html"
 	"log"
 	"os"
+	"regexp"
 	"strings"
 	"time"
 
@@ -109,7 +110,10 @@ GetDishes uses goquery https://github.com/PuerkitoBio/goquery to extract
 dishes from the Studentenwerk München canteen menu webpage located at url and
 returns a (possibly empty) list of Dish objects.
 
-At the moment only main dishes are returned.
+The output should contain only main dishes. However due to the cluttered
+classification by the Studentenwerk, there might still be sides/desserts which
+are not handled correctly.
+All declarations (e.g. (v) for "dish is vegan") are stripped from the dish names.
 */
 func GetDishes(url string) []Dish {
 	// fetch html from Studentenwerk
@@ -130,19 +134,48 @@ func GetDishes(url string) []Dish {
 		currentDish.Name = s.Find(".js-schedule-dish-description").Text()
 		// get rid of the "allergenkennzeichnungspflichtigen" ingredients
 		currentDish.Name = strings.Split(currentDish.Name, "[")[0]
-		currentDish.Name = strings.Trim(currentDish.Name, " ")
-		// we are only interested in main dishes
-		// so first we ignore everything that is of category "Beilagen"
-		if currentDish.Category != "Beilagen" {
-			// get rid of everything, that is just a single word (e.g. Reis)
-			if len(strings.Split(currentDish.Name, " ")) != 1 {
-				// now ignore some known side dishes, we didn't catch yet
-				if currentDish.Name != "Saisonale Beilagensalate" &&
-					!strings.HasPrefix(currentDish.Name, "Antipasti") {
-					dishes = append(dishes, currentDish)
-				}
-			}
+		// remove all "Zusatzstoffe" i.e. numbers enclosed in parentheses
+		reZusatzstoffe, err := regexp.Compile(`\(([0-9]+,*)+\)`)
+		if err != nil {
+			log.Fatal(err)
 		}
+		currentDish.Name = reZusatzstoffe.ReplaceAllString(currentDish.Name, "")
+		// remove vegetarian (f), vegan (v), beef (R), pork (S), (GQB) and (MSC)
+		// declarations
+		reDeclarations, err := regexp.Compile(` \(([fvRSGQBMC]+,*)+\)`)
+		if err != nil {
+			log.Fatal(err)
+		}
+		currentDish.Name = reDeclarations.ReplaceAllString(currentDish.Name, "")
+		// remove any trailing whitespaces
+		currentDish.Name = strings.TrimSpace(currentDish.Name)
+		// we are only interested in main dishes
+		// ignore everything that is of category "Beilagen"
+		if currentDish.Category == "Beilagen" {
+			return
+		}
+		// ignore everything that is of category "Beilagen"
+		if currentDish.Category == "Aktion" {
+			return
+		}
+		// ignore everything, that is just a single word
+		if len(strings.Split(currentDish.Name, " ")) == 1 {
+			return
+		}
+		// ignore known side dishes / desserts we did not catch otherwise
+		if currentDish.Name == "Saisonale Beilagensalate" {
+			return
+		}
+		if strings.HasPrefix(currentDish.Name, "Müsli mit") {
+			return
+		}
+		if strings.HasPrefix(currentDish.Name, "Joghurt mit") {
+			return
+		}
+		if strings.HasPrefix(currentDish.Name, "Quark mit") {
+			return
+		}
+		dishes = append(dishes, currentDish)
 	})
 	return dishes
 }
