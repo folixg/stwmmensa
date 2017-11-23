@@ -66,6 +66,32 @@ func TestGermanWeekday(t *testing.T) {
 	}
 }
 
+func TestGermanMonth(t *testing.T) {
+	cases := []struct {
+		in       time.Month
+		expected string
+	}{
+		{1, "Januar"},
+		{2, "Februar"},
+		{3, "März"},
+		{4, "April"},
+		{5, "Mai"},
+		{6, "Juni"},
+		{7, "Juli"},
+		{8, "August"},
+		{9, "September"},
+		{10, "Oktober"},
+		{11, "November"},
+		{12, "Dezember"},
+	}
+	for _, c := range cases {
+		got := GermanMonth(c.in)
+		if got != c.expected {
+			t.Errorf("GermanMonth(%d) == %q, expected %q\n", c.in, got, c.expected)
+		}
+	}
+}
+
 func TestGetDate(t *testing.T) {
 	cases := []struct {
 		in       time.Time

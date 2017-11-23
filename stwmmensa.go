@@ -72,6 +72,13 @@ func GermanWeekday(w time.Weekday) string {
 	return GermanWeekdays[w]
 }
 
+// GermanMonth returns the german name for a time.Month
+func GermanMonth(m time.Month) string {
+	var GermanMonths = [12]string{"Januar", "Februar", "März", "April", "Mai",
+		"Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"}
+	return GermanMonths[m-1]
+}
+
 /*
 GetDate returns the date for which we want to show the canteen menu based
 on the time now.
@@ -250,7 +257,10 @@ The menu consists of a title containing the date which was given as input
 and a list of the Dish objects contained in dishes.
 
 The output will look somethin like this:
-	<h1 class="mensa-title">Mensa am Donnerstag den 01.06.</h1>
+	<h1>
+	<span> class="mensa-title">Mensa</span>
+	<span> class="mensa-date">Donnerstag 01. Juni 2017"</span>
+	</h1>
 	<div class="mensa-box">
 	<div class="mensa-item">
 	<span class="mensa-name">Tagesgericht 1</span>
@@ -286,11 +296,14 @@ func FormatLIS(dishes []Dish, date time.Time, outfile string) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	titleString := "Mensa am " + GermanWeekday(date.Weekday()) + " den " +
-		date.Format("02.01.")
+	outFile.WriteString("<h1>")
+	outFile.WriteString("<span class=\"mensa-title\">Mensa</span>\n")
+	titleString := GermanWeekday(date.Weekday()) + " " + date.Format("02.") + " " +
+		GermanMonth(date.Month()) + date.Format(" 2006")
 	// set title
-	outFile.WriteString("<h1 class=\"mensa-title\">" +
-		html.EscapeString(titleString) + "</h1>\n")
+	outFile.WriteString("<span class=\"mensa-date\">" +
+		html.EscapeString(titleString) + "<class>\n")
+	outFile.WriteString("</h1>")
 	// create box
 	outFile.WriteString("<div class=\"mensa-box\">\n")
 	// write dishes
